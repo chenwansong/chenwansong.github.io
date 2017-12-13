@@ -81,3 +81,8 @@ deploy:
   type: git
   repo: https://github.com/chenwansong/chenwansong.github.io.git
   branch: master
+
+server:
+  port: 4001
+  compress: true
+  header: true
