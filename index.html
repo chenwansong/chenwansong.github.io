@@ -259,6 +259,184 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/18/使用Jsoup爬取网页内容/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chen wansong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wansong's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/18/使用Jsoup爬取网页内容/" itemprop="url">使用Jsoup爬取网页内容</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-18T00:00:00+08:00">
+                2017-12-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、Jsoup相关资料"><a href="#一、Jsoup相关资料" class="headerlink" title="一、Jsoup相关资料"></a>一、Jsoup相关资料</h3><ul>
+<li><a href="https://jsoup.org/" target="_blank" rel="noopener">Jsoup官网</a></li>
+<li><a href="http://www.open-open.com/jsoup/" target="_blank" rel="noopener">中文使用文档</a></li>
+</ul>
+<h3 id="二、使用方法"><a href="#二、使用方法" class="headerlink" title="二、使用方法"></a>二、使用方法</h3><ol>
+<li><p>心得</p>
+<ul>
+<li>Jsoup适合用来解析静态网页(目前我也只用来解析静态网页)，稍微懂一些Java基本就能无障碍使用Jsoup来解析网页。</li>
+<li>Jsoup的API简单易于理解，上手快，学习成本低。</li>
+<li>如果大家有好的办法或者工具可以与Jsoup结合起来解析动态网页，请一定要告诉我！</li>
+</ul>
+</li>
+<li><p>Jsoup其实就是把网页读取为一个HTML文档，然后根据文档内的标签来解析数据。</p>
+<ul>
+<li><p>首先需要读取这个文档：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String url = &quot;http://ccc.spdb.com.cn/miniSite/Platamex2017/1_4_list.shtml&quot;;</span><br><span class="line">Document document = Jsoup.connect(url).get();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用DOM方法来遍历一个文档</p>
+<blockquote>
+<p><a href="http://www.open-open.com/jsoup/dom-navigation.htm" target="_blank" rel="noopener">http://www.open-open.com/jsoup/dom-navigation.htm</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Element ele = document.getElementById(&quot;content&quot;);</span><br><span class="line">     Elements elements = ele.getElementsByClass(&quot;addlist&quot;);</span><br><span class="line">     for (Element element : elements) &#123;</span><br><span class="line">         Element province = element.select(&quot;h3&quot;).first();</span><br><span class="line">         Elements tbody = element.selectFirst(&quot;table&quot;).selectFirst(&quot;tbody&quot;).select(&quot;tr&quot;);</span><br><span class="line">         for (int i = 1; i &lt; tbody.size(); i++) &#123;</span><br><span class="line">             AreaCode areaCode = new AreaCode();</span><br><span class="line">             areaCode.province = province.text();</span><br><span class="line">             Elements tds = tbody.get(i).select(&quot;td&quot;);</span><br><span class="line">             areaCode.code = tds.get(0).text();</span><br><span class="line">             areaCode.city = tds.get(1).text();</span><br><span class="line">             System.out.println(&quot;-----&quot; + areaCode.toString());</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>使用选择器语法来查找元素</p>
+<blockquote>
+<p>这个翻译里面介绍的非常详细，我就不画蛇添足了<br><a href="http://www.open-open.com/jsoup/selector-syntax.htm" target="_blank" rel="noopener">http://www.open-open.com/jsoup/selector-syntax.htm</a></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>代码</p>
+<ul>
+<li>下面一段是我用来解析一个网页，用来给前阵子写的微信小程序获取数据。</li>
+<li>全部代码已经上传到[github]（<a href="https://github.com/chenwansong/JsopDemo）" target="_blank" rel="noopener">https://github.com/chenwansong/JsopDemo）</a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">     String url = &quot;http://ccc.spdb.com.cn/miniSite/Platamex2017/1_4_list.shtml&quot;;</span><br><span class="line">     Document document = Jsoup.connect(url).get();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">     Element body = document.body();</span><br><span class="line">     Element tbody = body.selectFirst(&quot;tbody&quot;);</span><br><span class="line">     Elements tr = tbody.select(&quot;tr&quot;);</span><br><span class="line"></span><br><span class="line">     for (int i = 2; i &lt; tr.size(); i++) &#123;</span><br><span class="line"></span><br><span class="line">         SpdbHotelBean spdbHotelBean = new SpdbHotelBean();</span><br><span class="line">         Elements tds = tr.get(i).select(&quot;td&quot;);</span><br><span class="line"></span><br><span class="line">         spdbHotelBean.country = tds.get(0).text();</span><br><span class="line">         spdbHotelBean.city = tds.get(1).text();</span><br><span class="line">         spdbHotelBean.hotelNameCN = tds.get(2).text();</span><br><span class="line">         spdbHotelBean.hotelNameEN = tds.get(3).text();</span><br><span class="line">         spdbHotelBean.type = tds.get(4).text();</span><br><span class="line">         spdbHotelBean.breakfast = tds.get(5).text();</span><br><span class="line">         spdbHotelBean.address = tds.get(6).text();</span><br><span class="line">         spdbHotelBean.closeDay = tds.get(7).text();</span><br><span class="line"></span><br><span class="line">         System.out.println(&quot;-----&quot; + spdbHotelBean.hotelNameCN);</span><br><span class="line"></span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/13/Hexo记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -867,7 +1045,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -878,7 +1056,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -889,7 +1067,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
